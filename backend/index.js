@@ -15,7 +15,11 @@ app.get("/", (req, res) => {
 app.get("/users", async (req, res) => {
   try {
     const [rows] = await connection.query("SELECT * FROM user_list");
-    res.send(rows);
+    if(rows.length>0){
+      res.send(rows);
+    }else{
+      res.send({message:"No users available"})
+    }
   } catch (err) {
     res.status(500).send("Error retrieving users");
   }
@@ -141,7 +145,13 @@ app.post("/register", async (req, res) => {
 app.get("/products", async (req, res) => {
   try {
     const [rows] = await connection.query("SELECT * FROM product_list");
-    res.send(rows);
+    if(rows.length>0){
+      res.send(rows);
+    }else{
+      res.send({
+        message:"No products available"
+      })
+    }
   } catch (e) {
     res.status(500).send("Error retrieving products");
   }
