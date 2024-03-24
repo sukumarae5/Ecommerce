@@ -8,6 +8,10 @@ const usernameRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 app.use(express.json());
 app.use(cors());
 
+app.get("/", (req, res) => {
+  res.send({ message: "Api Working Fine" });
+});
+
 app.get("/users", async (req, res) => {
   try {
     const [rows] = await connection.query("SELECT * FROM user_list");
@@ -147,7 +151,7 @@ app.get("/products", async (req, res) => {
 app.post("/addproduct", async (req, res) => {
   try {
     var data = req.body;
-    
+
     var productData = [
       data.title,
       data.description,
@@ -160,14 +164,14 @@ app.post("/addproduct", async (req, res) => {
       data.thumbnail,
       data.images,
     ];
-      console.log(productData);
+    console.log(productData);
     await connection.query(
       "INSERT INTO product_list(title, description, price, discountPercentage, rating, stock, brand, category, thumbnail, images) VALUES(?)",
       [productData]
     );
     res.send({
-      message:"Product added successfully"
-    })
+      message: "Product added successfully",
+    });
   } catch (e) {
     res.send({
       message: "error registering product",
