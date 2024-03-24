@@ -15,13 +15,14 @@ app.get("/", (req, res) => {
 app.get("/users", async (req, res) => {
   try {
     const [rows] = await connection.query("SELECT * FROM user_list");
+    console.log(rows.length);
     if(rows.length>0){
       res.send(rows);
     }else{
       res.send({message:"No users available"})
     }
   } catch (err) {
-    res.status(500).send("Error retrieving users");
+    res.status(500).send({message:"Error retrieving users"});
   }
 });
 
@@ -153,7 +154,7 @@ app.get("/products", async (req, res) => {
       })
     }
   } catch (e) {
-    res.status(500).send("Error retrieving products");
+    res.status(500).send({message:"Error retrieving products"});
   }
 });
 
