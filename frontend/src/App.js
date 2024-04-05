@@ -1,13 +1,14 @@
 import { Outlet } from 'react-router-dom';
 import './App.css';
-import Header from './Pages/Header';
+// import Header from './Pages/Header';
+import Dashboard from './Dashboard/Dashboard';
 
 function App() {
   return (
-    <>
-      <Header />
+    <div className='d-flex flex-direction-column'>
+      <Dashboard />
       <Outlet />
-    </>
+    </div>
   );
 }
 
