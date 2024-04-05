@@ -14,8 +14,7 @@ app.get("/", (req, res) => {
 
 app.get("/users", async (req, res) => {
   try {
-    const [rows] = await connection.query("SELECT * FROM users");
-    console.log(rows.length);
+    const [rows] = await connection.query("SELECT * FROM user_list");
     if(rows.length>0){
       res.send(rows);
     }else{
@@ -40,7 +39,7 @@ app.post("/login", async (req, res) => {
     } else {
       try {
         const [rows, feilds] = await connection.query(
-          "SELECT * FROM users WHERE username=? AND password=?",
+          "SELECT * FROM user_list WHERE username=? AND password=?",
           [data.username, data.password]
         );
         if (rows == "") {
@@ -65,7 +64,7 @@ app.post("/login", async (req, res) => {
     } else {
       try {
         const [rows, feilds] = await connection.query(
-          "SELECT * FROM users WHERE email=? AND password=?",
+          "SELECT * FROM user_list WHERE email=? AND password=?",
           [data.email, data.password]
         );
         if (rows == "") {
@@ -96,7 +95,7 @@ app.post("/register", async (req, res) => {
     if (data.password === data.confirmpassword) {
       try {
         const [existingUser] = await connection.query(
-          "SELECT * FROM users WHERE email=?",
+          "SELECT * FROM user_list WHERE email=?",
           [email]
         );
         if (existingUser.length > 0) {
@@ -121,7 +120,7 @@ app.post("/register", async (req, res) => {
           ];
 
           await connection.query(
-            "INSERT INTO users(firstName, lastName, maidenName, age, gender, email, phone, username, password, birthDate, image, address, bank) VALUES(?)",
+            "INSERT INTO user_list(firstName, lastName, maidenName, age, gender, email, phone, username, password, birthDate, image, address, bank) VALUES(?)",
             [userData]
           );
           res.send({
@@ -145,7 +144,7 @@ app.post("/register", async (req, res) => {
 //get products
 app.get("/products", async (req, res) => {
   try {
-    const [rows] = await connection.query("SELECT * FROM products");
+    const [rows] = await connection.query("SELECT * FROM product_list");
     if(rows.length>0){
       res.send(rows);
     }else{
@@ -177,7 +176,7 @@ app.post("/addproduct", async (req, res) => {
     ];
     console.log(productData);
     await connection.query(
-      "INSERT INTO products(title, description, price, discountPercentage, rating, stock, brand, category, thumbnail, images) VALUES(?)",
+      "INSERT INTO product_list(title, description, price, discountPercentage, rating, stock, brand, category, thumbnail, images) VALUES(?)",
       [productData]
     );
     res.send({
