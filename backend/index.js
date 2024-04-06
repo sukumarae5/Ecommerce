@@ -2,6 +2,8 @@ const express = require("express");
 var app = express();
 const cors = require("cors");
 const connection = require("./connection");
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 
 const usernameRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -84,7 +86,65 @@ app.post("/login", async (req, res) => {
 });
 
 //Register a new user
-app.post("/register", async (req, res) => {
+// app.post("/register", async (req, res) => {
+//   var data = req.body;
+//   var email = data.email;
+//   if (!usernameRegex.test(email)) {
+//     res.send({
+//       message: "Enter valid email",
+//     });
+//   } else {
+//     if (data.password === data.confirmpassword) {
+//       try {
+//         const [existingUser] = await connection.query(
+//           "SELECT * FROM user_list WHERE email=?",
+//           [email]
+//         );
+//         if (existingUser.length > 0) {
+//           res.send({
+//             message: "user already exist",
+//           });
+//         } else {
+//           var userData = [
+//             data.firstName,
+//             data.lastName,
+//             data.maidenName,
+//             data.age,
+//             data.gender,
+//             data.email,
+//             data.phone,
+//             data.username,
+//             data.password,
+//             data.birthDate,
+//             data.image,
+//             JSON.stringify(data.address),
+//             JSON.stringify(data.bank),
+//           ];
+
+//           await connection.query(
+//             "INSERT INTO user_list(firstName, lastName, maidenName, age, gender, email, phone, username, password, birthDate, image, address, bank) VALUES(?)",
+//             [userData]
+//           );
+//           res.send({
+//             message: "Registered successfully",
+//           });
+//         }
+//       } catch (e) {
+//         console.log(e);
+//         res.send({
+//           message: "All feilds required",
+//         });
+//       }
+//     } else {
+//       res.send({
+//         message: "Password dosen't match",
+//       });
+//     }
+//   }
+// });
+
+//Register using image
+app.post("/register", upload.single('image'), async (req, res) => {
   var data = req.body;
   var email = data.email;
   if (!usernameRegex.test(email)) {
@@ -114,7 +174,7 @@ app.post("/register", async (req, res) => {
             data.username,
             data.password,
             data.birthDate,
-            data.image,
+            req.file.buffer, // Store image data
             JSON.stringify(data.address),
             JSON.stringify(data.bank),
           ];
@@ -130,16 +190,17 @@ app.post("/register", async (req, res) => {
       } catch (e) {
         console.log(e);
         res.send({
-          message: "All feilds required",
+          message: "All fields required",
         });
       }
     } else {
       res.send({
-        message: "Password dosen't match",
+        message: "Password doesn't match",
       });
     }
   }
 });
+
 
 //get products
 app.get("/products", async (req, res) => {
@@ -183,6 +244,7 @@ app.post("/addproduct", async (req, res) => {
       message: "Product added successfully",
     });
   } catch (e) {
+    console.log(e);
     res.send({
       message: "error registering product",
     });
