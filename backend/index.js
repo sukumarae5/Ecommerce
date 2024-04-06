@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(cors());
 
 app.get("/", (req, res) => {
-  res.send({ message: "Api Working Fine" });
+  res.send({ message: "Api is Working Fine" });
 });
 
 app.get("/users", async (req, res) => {
