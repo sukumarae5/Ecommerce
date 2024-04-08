@@ -107,21 +107,16 @@ app.post("/register", async (req, res) => {
           var userData = [
             data.firstName,
             data.lastName,
-            data.maidenName,
-            data.age,
             data.gender,
             data.email,
             data.phone,
             data.username,
             data.password,
-            data.birthDate,
-            data.image,
-            JSON.stringify(data.address),
-            JSON.stringify(data.bank),
+            data.image
           ];
 
           await connection.query(
-            "INSERT INTO user_list(firstName, lastName, maidenName, age, gender, email, phone, username, password, birthDate, image, address, bank) VALUES(?)",
+            "INSERT INTO user_list(firstName, lastName, gender, email, phone, username, password, image) VALUES(?)",
             [userData]
           );
           res.send({
