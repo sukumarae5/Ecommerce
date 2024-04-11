@@ -152,6 +152,24 @@ app.get("/products", async (req, res) => {
       });
     }
   } catch (e) {
+    console.log(e);
+    res.status(500).send({ message: "Error retrieving products" });
+  }
+});
+
+//get specified products
+app.get("/products/:id", async (req, res) => {
+  try {
+    const [rows] = await connection.query("SELECT * FROM product_list");
+    let objToFind = await rows.find((e) => e.id == req.params.id);
+    if (objToFind != "") {
+      res.send(objToFind);
+    } else {
+      res.send({
+        message: "No products available",
+      });
+    }
+  } catch (e) {
     res.status(500).send({ message: "Error retrieving products" });
   }
 });
