@@ -160,19 +160,20 @@ app.get("/products", async (req, res) => {
 //get specified products
 app.get("/products/:id", async (req, res) => {
   try {
-    const [rows] = await connection.query("SELECT * FROM product_list");
-    let objToFind = await rows.find((e) => e.id == req.params.id);
-    if (objToFind != "") {
-      res.send(objToFind);
+    const [rows] = await connection.query("SELECT * FROM product_list WHERE id = ?", [req.params.id]);
+    if (rows.length > 0) {
+      res.send(rows[0]);
     } else {
-      res.send({
-        message: "No products available",
+      res.status(404).send({
+        message: "Product not found",
       });
     }
   } catch (e) {
-    res.status(500).send({ message: "Error retrieving products" });
+    console.error(e);
+    res.status(500).send({ message: "Error retrieving product" });
   }
 });
+
 
 //register product
 app.post("/addproduct", async (req, res) => {
