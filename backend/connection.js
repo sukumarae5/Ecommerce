@@ -1,7 +1,7 @@
 const myqsl = require("mysql2/promise");
 var sqlConnection = myqsl.createPool({
   host: "0.tcp.in.ngrok.io",
-  port: 12215,
+  port: 19130,
   user: "root",
   password: "123456",
   database: "ecommercedb",
