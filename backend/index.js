@@ -209,5 +209,5 @@ app.post("/addproduct", async (req, res) => {
 });
 
 app.listen(8080, () => {
-  console.log("Running");
+  console.log("Running on port 8080");
 });
