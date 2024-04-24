@@ -3,16 +3,17 @@ var app = express();
 const cors = require("cors");
 const connection = require("./connection");
 
-
 const usernameRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 app.use(express.json());
 app.use(cors());
 
-
-
 app.get("/", (req, res) => {
-  res.send({ message: "Api is Working Fine" });
+  try {
+    res.send({ message: "Api is Working Fine" });
+  } catch (err) {
+    res.send(err);
+  }
 });
 
 app.get("/users", async (req, res) => {
@@ -24,7 +25,8 @@ app.get("/users", async (req, res) => {
       res.send({ message: "No users available" });
     }
   } catch (err) {
-    res.status(500).send({ message: "Error retrieving users" });
+    console.log(err);
+    res.status(500).send(err);
   }
 });
 
@@ -114,7 +116,7 @@ app.post("/register", async (req, res) => {
             data.phone,
             data.username,
             data.password,
-            data.image
+            data.image,
           ];
 
           await connection.query(
@@ -139,7 +141,6 @@ app.post("/register", async (req, res) => {
   }
 });
 
-
 //get products
 app.get("/products", async (req, res) => {
   try {
@@ -160,7 +161,10 @@ app.get("/products", async (req, res) => {
 //get specified products
 app.get("/products/:id", async (req, res) => {
   try {
-    const [rows] = await connection.query("SELECT * FROM product_list WHERE id = ?", [req.params.id]);
+    const [rows] = await connection.query(
+      "SELECT * FROM product_list WHERE id = ?",
+      [req.params.id]
+    );
     if (rows.length > 0) {
       res.send(rows[0]);
     } else {
@@ -173,7 +177,6 @@ app.get("/products/:id", async (req, res) => {
     res.status(500).send({ message: "Error retrieving product" });
   }
 });
-
 
 //register product
 app.post("/addproduct", async (req, res) => {
@@ -192,7 +195,6 @@ app.post("/addproduct", async (req, res) => {
       data.thumbnail,
       data.images,
     ];
-    console.log(productData);
     await connection.query(
       "INSERT INTO product_list(title, description, price, discountPercentage, rating, stock, brand, category, thumbnail, images) VALUES(?)",
       [productData]
@@ -206,6 +208,20 @@ app.post("/addproduct", async (req, res) => {
       message: "error registering product",
     });
   }
+});
+
+app.delete("/deleteproduct/:id", async (req, res) => {
+  connection.query(
+    "DELETE from employee WHERE id=?",
+    [req.params.id],
+    (err) => {
+      if (err) {
+        res.send({ message: err });
+      } else {
+        res.send({ message: "success" });
+      }
+    }
+  );
 });
 
 app.listen(8080, () => {
