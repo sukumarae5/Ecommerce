@@ -212,7 +212,7 @@ app.post("/addproduct", async (req, res) => {
 
 app.delete("/deleteproduct/:id", async (req, res) => {
   connection.query(
-    "DELETE from employee WHERE id=?",
+    "DELETE from product_list WHERE id=?",
     [req.params.id],
     (err) => {
       if (err) {
