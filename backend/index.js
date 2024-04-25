@@ -211,17 +211,19 @@ app.post("/addproduct", async (req, res) => {
 });
 
 app.delete("/deleteproduct/:id", async (req, res) => {
-  connection.query(
-    "DELETE from employee WHERE id=?",
-    [req.params.id],
-    (err) => {
-      if (err) {
-        res.send({ message: err });
-      } else {
-        res.send({ message: "success" });
-      }
+  try {
+    const result = await connection.query(
+      "DELETE from product_list WHERE id=?",
+      [req.params.id]
+    );
+    if (result[0].affectedRows > 0) {
+      res.send({ message: "successfully deleted" });
+    } else {
+      res.status(404).send({ message: "Product not found" });
     }
-  );
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
 });
 
 app.listen(8080, () => {
