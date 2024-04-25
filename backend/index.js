@@ -143,6 +143,23 @@ app.post("/register", async (req, res) => {
   }
 });
 
+//delete user
+app.delete("/deleteUser/:id",async (req,res)=>{
+  try {
+    const result = await connection.query(
+      "DELETE from user_list WHERE id=?",
+      [req.params.id]
+    );
+    if (result[0].affectedRows > 0) {
+      res.send({ message: "successfully deleted" });
+    } else {
+      res.status(404).send({ message: "User not found" });
+    }
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
+})
+
 //get products
 app.get("/products", async (req, res) => {
   try {
@@ -212,6 +229,7 @@ app.post("/addproduct", async (req, res) => {
   }
 });
 
+//delete product
 app.delete("/deleteproduct/:id", async (req, res) => {
   try {
     const result = await connection.query(
